@@ -1,0 +1,162 @@
+entity,table,field,type,required,allowed_values,unit,unique,key,validation_rule
+InvestorProfile,investor_profile,investor_id,TEXT,Y,INV-NNNNNN,,Y,PK,"Zero-padded sequential, immutable"
+InvestorProfile,investor_profile,risk_profile,TEXT,Y,"CONSERVATIVE, MODERATE, BALANCED, GROWTH, AGGRESSIVE",,N,,Drawn from age-conditioned weights; drives target model and minimum cash
+InvestorProfile,investor_profile,risk_score,INTEGER,Y,1..100,points,N,,"Derived: base(profile)+round((50-age)/5)+round(min(horizon,30)/6), clamped"
+InvestorProfile,investor_profile,age,INTEGER,Y,21..80,years,N,,
+InvestorProfile,investor_profile,investment_horizon_years,INTEGER,Y,1..40,years,N,,
+InvestorProfile,investor_profile,annual_income_band,TEXT,Y,"LOW, MIDDLE, UPPER, HIGH",,N,,
+InvestorProfile,investor_profile,country,TEXT,Y,"US, GB, IN, SG, DE, AE",,N,,
+InvestorProfile,investor_profile,base_currency,TEXT,Y,USD,,N,,Single-currency simulation
+InvestorProfile,investor_profile,kyc_status,TEXT,Y,"VERIFIED, PENDING, EXPIRED",,N,,EXPIRED freezes the investor's portfolios; PENDING blocks customer acceptance
+InvestorProfile,investor_profile,kyc_expiry_date,DATE,Y,,,N,,< as_of_date if and only if kyc_status = EXPIRED
+InvestorProfile,investor_profile,created_date,DATE,Y,,,N,,Earlier than every portfolio inception_date
+InvestorProfile,investor_profile,status,TEXT,Y,"ACTIVE, SUSPENDED",,N,,
+Portfolio,portfolio,portfolio_id,TEXT,Y,PORT-<investor-id>-NN,,Y,PK,PORT-INV-000001-01; NN is portfolio_seq
+Portfolio,portfolio,investor_id,TEXT,Y,,,N,FK,FK -> investor_profile.investor_id
+Portfolio,portfolio,portfolio_seq,INTEGER,Y,1..9,,N,,Matches the NN suffix of portfolio_id
+Portfolio,portfolio,portfolio_name,TEXT,Y,,,N,,
+Portfolio,portfolio,base_currency,TEXT,Y,USD,,N,,
+Portfolio,portfolio,inception_date,DATE,Y,,,N,,"After investor created_date, at least 180 days before as_of_date"
+Portfolio,portfolio,status,TEXT,Y,"ACTIVE, FROZEN, CLOSED",,N,,FROZEN if and only if the investor's kyc_status = EXPIRED
+Portfolio,portfolio,status_reason,TEXT,N,KYC_EXPIRED,,N,,Required when status = FROZEN
+Instrument,instrument,instrument_id,TEXT,Y,INS-NNNNNN,,Y,PK,
+Instrument,instrument,ticker,TEXT,Y,,,Y,,"Synthetic, e.g. EQ0001"
+Instrument,instrument,instrument_name,TEXT,Y,,,N,,
+Instrument,instrument,asset_class,TEXT,Y,"EQUITY, FIXED_INCOME, REAL_ASSETS, CASH",,N,,
+Instrument,instrument,sub_class,TEXT,Y,,,N,,Sub-bucket inside asset_class
+Instrument,instrument,currency,TEXT,Y,USD,,N,,
+Instrument,instrument,liquidity_tier,TEXT,Y,"HIGH, MEDIUM, LOW",,N,,Selects the MAX_PCT_ADV constraint
+Instrument,instrument,avg_daily_volume_units,INTEGER,Y,>0,units/day,N,,
+Instrument,instrument,lot_size,REAL,Y,>0,units,N,,Trade quantity must be a multiple (0.01 for cash)
+Instrument,instrument,is_excluded,BOOLEAN,Y,,,N,,"True => firm-wide EXCLUDED_INSTRUMENT constraint exists; BUY forbidden, SELL allowed"
+Instrument,instrument,exclusion_reason,TEXT,N,"RESTRICTED_LIST, SANCTIONS_SCREEN, INTERNAL_POLICY",,N,,Required iff is_excluded
+Instrument,instrument,listing_date,DATE,Y,,,N,,Before first price_date
+Instrument,instrument,status,TEXT,Y,"ACTIVE, SUSPENDED, DELISTED",,N,,
+MarketPrice,market_price,price_id,TEXT,Y,PX-<instrument-id>-YYYYMMDD,,Y,PK,
+MarketPrice,market_price,instrument_id,TEXT,Y,,,N,FK,FK -> instrument.instrument_id
+MarketPrice,market_price,price_date,DATE,Y,,,N,,Weekday; 250 consecutive trading days ending at as_of_date
+MarketPrice,market_price,close_price,REAL,N,>0,USD,N,,Null if and only if price_status = MISSING
+MarketPrice,market_price,price_status,TEXT,Y,"OBSERVED, MISSING",,N,,
+MarketPrice,market_price,source,TEXT,Y,SYNTHETIC_GBM,,N,,"Correlated geometric random walk, fixed seed"
+Holding,holding,holding_id,TEXT,Y,HOLD-<portfolio-id>-<instrument-id>,,Y,PK,
+Holding,holding,portfolio_id,TEXT,Y,,,N,FK,FK -> portfolio.portfolio_id
+Holding,holding,instrument_id,TEXT,Y,,,N,FK,FK -> instrument.instrument_id
+Holding,holding,as_of_date,DATE,Y,,,N,,
+Holding,holding,quantity,REAL,Y,>0,units (USD for cash),N,,
+Holding,holding,avg_cost_per_unit,REAL,Y,>0,USD,N,,
+Holding,holding,acquired_date,DATE,Y,,,N,,Between portfolio inception_date and as_of_date
+Holding,holding,price_used,REAL,Y,,USD,N,,Last OBSERVED close on or before as_of_date
+Holding,holding,price_date_used,DATE,Y,,,N,,Date of price_used
+Holding,holding,price_age_days,INTEGER,Y,,trading days,N,,Trading days between price_date_used and as_of_date
+Holding,holding,stale_price_flag,BOOLEAN,Y,,,N,,price_age_days > stale_days_threshold (3)
+Holding,holding,market_value,REAL,Y,,USD,N,,"round(quantity * price_used, 2)"
+Holding,holding,current_weight_pct,REAL,Y,,% of portfolio,N,,market_value / sum(market_value of portfolio) * 100
+Holding,holding,status,TEXT,Y,"ACTIVE, CLOSED",,N,,
+TargetAllocation,target_allocation,target_id,TEXT,Y,TGT-<portfolio-id>-<asset_class>-V<n>,,Y,PK,
+TargetAllocation,target_allocation,portfolio_id,TEXT,Y,,,N,FK,FK -> portfolio.portfolio_id
+TargetAllocation,target_allocation,asset_class,TEXT,Y,"EQUITY, FIXED_INCOME, REAL_ASSETS, CASH",,N,,
+TargetAllocation,target_allocation,target_weight_pct,REAL,Y,0..100,% of portfolio,N,,Weights of the ACTIVE version must sum to 100 (violations are labelled anomalies)
+TargetAllocation,target_allocation,tolerance_band_pct,REAL,Y,>0,percentage points,N,,Rebalance trigger: abs(current - target) > band
+TargetAllocation,target_allocation,version,INTEGER,Y,>=1,,N,,
+TargetAllocation,target_allocation,effective_from,DATE,Y,,,N,,
+TargetAllocation,target_allocation,effective_to,DATE,N,,,N,,Null while ACTIVE; >= effective_from; earlier than next version's effective_from
+TargetAllocation,target_allocation,status,TEXT,Y,"ACTIVE, SUPERSEDED",,N,,
+FeeSchedule,fee_schedule,fee_schedule_id,TEXT,Y,FEE-NNNNNN,,Y,PK,
+FeeSchedule,fee_schedule,asset_class,TEXT,Y,"EQUITY, FIXED_INCOME, REAL_ASSETS, CASH",,N,,
+FeeSchedule,fee_schedule,tier,TEXT,Y,"TIER_1, TIER_2, TIER_3",,N,,
+FeeSchedule,fee_schedule,min_notional,REAL,Y,,USD,N,,Inclusive lower bound; tiers contiguous
+FeeSchedule,fee_schedule,max_notional,REAL,Y,,USD,N,,Exclusive upper bound
+FeeSchedule,fee_schedule,commission_bps,REAL,Y,,bps of notional,N,,
+FeeSchedule,fee_schedule,flat_fee,REAL,Y,,USD,N,,
+FeeSchedule,fee_schedule,min_fee,REAL,Y,,USD,N,,
+FeeSchedule,fee_schedule,fee_version,INTEGER,Y,>=1,,N,,
+FeeSchedule,fee_schedule,effective_from,DATE,Y,,,N,,
+FeeSchedule,fee_schedule,effective_to,DATE,N,,,N,,
+FeeSchedule,fee_schedule,status,TEXT,Y,"ACTIVE, SUPERSEDED",,N,,
+FeeSchedule,fee_schedule,created_by,TEXT,Y,USR-ADM-NNN,,N,,System administrator who published the row
+Constraint,constraint,constraint_id,TEXT,Y,CON-NNNNNN,,Y,PK,
+Constraint,constraint,constraint_type,TEXT,Y,"MIN_TRADE_VALUE, MAX_TURNOVER_PCT, MAX_PCT_ADV, EXCLUDED_INSTRUMENT, MIN_CASH_PCT",,N,,
+Constraint,constraint,scope_type,TEXT,Y,"GLOBAL, ASSET_CLASS, LIQUIDITY_TIER, INSTRUMENT, RISK_PROFILE",,N,,
+Constraint,constraint,scope_id,TEXT,N,,,N,,"Asset class, tier, instrument_id or risk profile; null for GLOBAL"
+Constraint,constraint,applies_to,TEXT,Y,"ALL_PORTFOLIOS, LISTED_PORTFOLIOS",,N,,
+Constraint,constraint,value,REAL,N,,,N,,Threshold; null for EXCLUDED_INSTRUMENT
+Constraint,constraint,unit,TEXT,Y,"USD, PCT_OF_PORTFOLIO, PCT_OF_ADV, NONE",,N,,
+Constraint,constraint,severity,TEXT,Y,HARD,,N,,
+Constraint,constraint,description,TEXT,Y,,,N,,
+Constraint,constraint,effective_from,DATE,Y,,,N,,
+Constraint,constraint,effective_to,DATE,N,,,N,,
+Constraint,constraint,status,TEXT,Y,"ACTIVE, RETIRED",,N,,
+Constraint,constraint,created_by,TEXT,Y,USR-ADM-NNN,,N,,
+PortfolioConstraint,portfolio_constraint,portfolio_constraint_id,TEXT,Y,PC-NNNNNN,,Y,PK,
+PortfolioConstraint,portfolio_constraint,portfolio_id,TEXT,Y,,,N,FK,FK -> portfolio.portfolio_id
+PortfolioConstraint,portfolio_constraint,constraint_id,TEXT,Y,,,N,FK,FK -> constraint.constraint_id
+PortfolioConstraint,portfolio_constraint,effective_from,DATE,Y,,,N,,>= portfolio inception_date
+PortfolioConstraint,portfolio_constraint,effective_to,DATE,N,,,N,,
+RebalanceProposal,rebalance_proposal,proposal_id,TEXT,Y,RB-YYYY-NNNNNN,,Y,PK,
+RebalanceProposal,rebalance_proposal,portfolio_id,TEXT,Y,,,N,FK,FK -> portfolio.portfolio_id
+RebalanceProposal,rebalance_proposal,as_of_date,DATE,Y,,,N,,
+RebalanceProposal,rebalance_proposal,generated_at,TIMESTAMP,Y,,,N,,UTC ISO-8601
+RebalanceProposal,rebalance_proposal,trigger_reason,TEXT,Y,"DRIFT_BREACH, PORTFOLIO_FROZEN",,N,,
+RebalanceProposal,rebalance_proposal,status,TEXT,Y,"DRAFT, PENDING_OPS_REVIEW, PENDING_COMPLIANCE_REVIEW, APPROVED, REJECTED, CUSTOMER_ACCEPTED, EXECUTED_SIMULATED, EXPIRED, BLOCKED",,N,,Equals the to_status of the latest proposal_event
+RebalanceProposal,rebalance_proposal,policy_version,TEXT,Y,POLICY-2026.10,,N,,
+RebalanceProposal,rebalance_proposal,target_weight_sum_pct,REAL,Y,,%,N,,Sum of ACTIVE target weights (should be 100)
+RebalanceProposal,rebalance_proposal,portfolio_value,REAL,Y,,USD,N,,Sum of holding market_value
+RebalanceProposal,rebalance_proposal,post_trade_value,REAL,Y,,USD,N,,Recomputed from post-trade holdings x prices (fees leave the portfolio)
+RebalanceProposal,rebalance_proposal,pre_max_abs_drift_pct,REAL,Y,,percentage points,N,,
+RebalanceProposal,rebalance_proposal,post_max_abs_drift_pct,REAL,Y,,percentage points,N,,
+RebalanceProposal,rebalance_proposal,drift_reduction_pct,REAL,Y,,%,N,,(pre - post) / pre * 100
+RebalanceProposal,rebalance_proposal,num_trades,INTEGER,Y,>=0,,N,,Count of Trade rows
+RebalanceProposal,rebalance_proposal,total_buy_value,REAL,Y,,USD,N,,Sum of BUY notional
+RebalanceProposal,rebalance_proposal,total_sell_value,REAL,Y,,USD,N,,Sum of SELL notional
+RebalanceProposal,rebalance_proposal,total_estimated_fees,REAL,Y,,USD,N,,Sum of trade estimated_fee (null counted as 0)
+RebalanceProposal,rebalance_proposal,turnover_pct,REAL,Y,,% of portfolio,N,,(buys + sells) / 2 / portfolio_value * 100
+RebalanceProposal,rebalance_proposal,cash_after,REAL,Y,,USD,N,,Post-trade value of the CASH class
+RebalanceProposal,rebalance_proposal,min_cash_required,REAL,Y,,USD,N,,MIN_CASH_PCT constraint x portfolio_value
+RebalanceProposal,rebalance_proposal,price_stale_count,INTEGER,Y,,,N,,Trades with stale_price_flag = true
+RebalanceProposal,rebalance_proposal,liquidity_capped_count,INTEGER,Y,,,N,,Trades reduced by the MAX_PCT_ADV cap
+RebalanceProposal,rebalance_proposal,suppressed_trade_count,INTEGER,Y,,,N,,Candidate trades dropped for MIN_TRADE_VALUE
+RebalanceProposal,rebalance_proposal,requires_compliance_review,BOOLEAN,Y,,,N,,True if review_reasons is not empty
+RebalanceProposal,rebalance_proposal,review_reasons,TEXT,N,,,N,,Pipe-separated: STALE_PRICE|LIQUIDITY_CAP|HIGH_NOTIONAL|HIGH_TURNOVER|NO_ELIGIBLE_BUY_INSTRUMENT
+Trade,trade,trade_id,TEXT,Y,TRD-<proposal-id>-NN,,Y,PK,
+Trade,trade,proposal_id,TEXT,Y,,,N,FK,FK -> rebalance_proposal.proposal_id
+Trade,trade,portfolio_id,TEXT,Y,,,N,FK,FK -> portfolio.portfolio_id; equals the proposal's portfolio
+Trade,trade,instrument_id,TEXT,Y,,,N,FK,FK -> instrument.instrument_id
+Trade,trade,side,TEXT,Y,"BUY, SELL",,N,,
+Trade,trade,quantity,REAL,Y,>0,units,N,,Multiple of lot_size; SELL <= holding quantity
+Trade,trade,holding_quantity_before,REAL,Y,,units,N,,Quantity in the Holding table (0 if not held)
+Trade,trade,price_used,REAL,Y,,USD,N,,
+Trade,trade,price_date_used,DATE,Y,,,N,,<= as_of_date
+Trade,trade,price_age_days,INTEGER,Y,,trading days,N,,
+Trade,trade,stale_price_flag,BOOLEAN,Y,,,N,,Must be true when price_age_days > 3
+Trade,trade,notional,REAL,Y,,USD,N,,"round(quantity * price_used, 2)"
+Trade,trade,fee_schedule_id,TEXT,N,,,N,FK,FK -> fee_schedule; null only for omitted-fee anomalies
+Trade,trade,estimated_fee,REAL,N,,USD,N,,From FeeSchedule tier; null = omitted
+Trade,trade,liquidity_cap_applied,BOOLEAN,Y,,,N,,Quantity reduced by MAX_PCT_ADV
+Trade,trade,trade_status,TEXT,Y,"PROPOSED, APPROVED, REJECTED, EXPIRED, EXECUTED_SIMULATED",,N,,Mapped from the proposal's final status
+ProposalEvent,proposal_event,event_id,TEXT,Y,EVT-NNNNNN,,Y,PK,
+ProposalEvent,proposal_event,proposal_id,TEXT,Y,,,N,FK,FK -> rebalance_proposal.proposal_id
+ProposalEvent,proposal_event,event_ts,TIMESTAMP,Y,,,N,,Non-decreasing per proposal
+ProposalEvent,proposal_event,from_status,TEXT,N,"DRAFT, PENDING_OPS_REVIEW, PENDING_COMPLIANCE_REVIEW, APPROVED, REJECTED, CUSTOMER_ACCEPTED, EXECUTED_SIMULATED, EXPIRED, BLOCKED",,N,,Null only for the first event
+ProposalEvent,proposal_event,to_status,TEXT,Y,"DRAFT, PENDING_OPS_REVIEW, PENDING_COMPLIANCE_REVIEW, APPROVED, REJECTED, CUSTOMER_ACCEPTED, EXECUTED_SIMULATED, EXPIRED, BLOCKED",,N,,Pair must be in TRANSITIONS
+ProposalEvent,proposal_event,actor_role,TEXT,Y,"SYSTEM, CUSTOMER, OPS_ANALYST, RISK_COMPLIANCE, SYSTEM_ADMIN",,N,,
+ProposalEvent,proposal_event,actor_id,TEXT,Y,,,N,,"SYSTEM, USR-OPS-NNN, USR-CMP-NNN or an investor_id"
+ProposalEvent,proposal_event,reason_code,TEXT,Y,,,N,,Rule that produced the transition
+DriftSnapshot,drift_snapshot,snapshot_id,TEXT,Y,SNAP-<portfolio-id>-<asset_class>,,Y,PK,
+DriftSnapshot,drift_snapshot,portfolio_id,TEXT,Y,,,N,FK,FK -> portfolio.portfolio_id
+DriftSnapshot,drift_snapshot,as_of_date,DATE,Y,,,N,,
+DriftSnapshot,drift_snapshot,asset_class,TEXT,Y,"EQUITY, FIXED_INCOME, REAL_ASSETS, CASH",,N,,
+DriftSnapshot,drift_snapshot,current_value,REAL,Y,,USD,N,,Sum of holding market_value in the class
+DriftSnapshot,drift_snapshot,current_weight_pct,REAL,Y,,%,N,,
+DriftSnapshot,drift_snapshot,target_weight_pct,REAL,Y,,%,N,,ACTIVE target
+DriftSnapshot,drift_snapshot,drift_pct,REAL,Y,,percentage points,N,,current - target
+DriftSnapshot,drift_snapshot,tolerance_band_pct,REAL,Y,,percentage points,N,,
+DriftSnapshot,drift_snapshot,breach_flag,BOOLEAN,Y,,,N,,abs(drift_pct) > tolerance_band_pct
+PostTradeAllocation,post_trade_allocation,post_alloc_id,TEXT,Y,PTA-<proposal-id>-<asset_class>,,Y,PK,
+PostTradeAllocation,post_trade_allocation,proposal_id,TEXT,Y,,,N,FK,FK -> rebalance_proposal.proposal_id
+PostTradeAllocation,post_trade_allocation,asset_class,TEXT,Y,"EQUITY, FIXED_INCOME, REAL_ASSETS, CASH",,N,,
+PostTradeAllocation,post_trade_allocation,pre_weight_pct,REAL,Y,,%,N,,
+PostTradeAllocation,post_trade_allocation,post_weight_pct,REAL,Y,,%,N,,Sums to 100 per proposal
+PostTradeAllocation,post_trade_allocation,target_weight_pct,REAL,Y,,%,N,,
+PostTradeAllocation,post_trade_allocation,pre_drift_pct,REAL,Y,,percentage points,N,,
+PostTradeAllocation,post_trade_allocation,post_drift_pct,REAL,Y,,percentage points,N,,
+PostTradeAllocation,post_trade_allocation,post_value,REAL,Y,,USD,N,,

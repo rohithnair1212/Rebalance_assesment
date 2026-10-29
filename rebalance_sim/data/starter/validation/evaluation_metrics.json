@@ -1,0 +1,101 @@
+{
+  "detector_vs_ground_truth": {
+    "per_issue_type": {
+      "TARGET_WEIGHTS_NOT_100": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "TRADE_EXCEEDS_HOLDING": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "EXCLUDED_INSTRUMENT_RECOMMENDED": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "FEE_OMITTED": {
+        "tp": 6,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "STALE_PRICE_UNFLAGGED": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      }
+    },
+    "overall": {
+      "tp": 14,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "other_findings_not_labelled_as_primary_anomaly": {
+      "LIQUIDITY_CAP_BREACH": 1
+    },
+    "other_findings_on_clean_proposals": 0,
+    "note": "Other findings (e.g. turnover cap) only occur on proposals that carry an injected anomaly; clean proposals must have 0."
+  },
+  "decision_agreement": {
+    "portfolios": 100,
+    "agreement_rate": 0.98,
+    "mismatches": {
+      "BLOCK_INVALID_TARGET -> REBALANCE": 2
+    },
+    "note": "Mismatches are the injected invalid-target portfolios that were rebalanced instead of blocked."
+  },
+  "outcomes": {
+    "portfolios": 100,
+    "breaching_portfolios": 29,
+    "breach_rate": 0.29,
+    "proposals": 29,
+    "proposal_status_counts": {
+      "APPROVED": 2,
+      "EXECUTED_SIMULATED": 21,
+      "REJECTED": 6
+    },
+    "compliance_escalation_rate": 0.4138,
+    "escalation_reason_counts": {
+      "LIQUIDITY_CAP": 7,
+      "NO_ELIGIBLE_BUY_INSTRUMENT": 1,
+      "STALE_PRICE": 5
+    },
+    "trades": 105,
+    "trades_stale_flagged": 6,
+    "trades_liquidity_capped": 7,
+    "mean_pre_max_drift_pct": 6.5599,
+    "mean_post_max_drift_pct": 2.3357,
+    "mean_drift_reduction_pct": 84.0123,
+    "median_turnover_pct": 5.0388,
+    "p95_turnover_pct": 11.4401,
+    "mean_fee_bps_of_notional": 18.836,
+    "total_estimated_fees_usd": 1460.33,
+    "suppressed_trades_below_min": 6,
+    "drift_snapshot_breach_by_class": {
+      "EQUITY": 9,
+      "FIXED_INCOME": 9,
+      "REAL_ASSETS": 19,
+      "CASH": 9
+    }
+  }
+}

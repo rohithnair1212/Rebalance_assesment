@@ -1,0 +1,1015 @@
+{
+  "overall_status": "PASS",
+  "checks_total": 109,
+  "checks_passed": 109,
+  "checks_failed": 0,
+  "row_counts": {
+    "investor_profile": 900,
+    "portfolio": 1000,
+    "instrument": 300,
+    "market_price": 75000,
+    "holding": 5000,
+    "target_allocation": 4396,
+    "fee_schedule": 24,
+    "constraint": 27,
+    "portfolio_constraint": 1720,
+    "rebalance_proposal": 301,
+    "trade": 917,
+    "proposal_event": 1408,
+    "drift_snapshot": 4000,
+    "post_trade_allocation": 1204
+  },
+  "business_rule_findings_by_type": {
+    "EXCLUDED_INSTRUMENT_RECOMMENDED": 15,
+    "FEE_OMITTED": 75,
+    "LIQUIDITY_CAP_BREACH": 2,
+    "STALE_PRICE_UNFLAGGED": 15,
+    "TARGET_WEIGHTS_NOT_100": 20,
+    "TRADE_EXCEEDS_HOLDING": 15,
+    "TURNOVER_CAP_BREACH": 8
+  },
+  "note": "Findings include the deliberately injected anomalies (see ground_truth/). Structural checks must all PASS.",
+  "checks": [
+    {
+      "check_id": "SCH-001",
+      "category": "schema",
+      "description": "CSV headers match the data dictionary",
+      "rows_checked": 14,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "PK-investor_profile",
+      "category": "primary_key",
+      "description": "investor_profile: primary key unique and non-null",
+      "rows_checked": 900,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "PK-portfolio",
+      "category": "primary_key",
+      "description": "portfolio: primary key unique and non-null",
+      "rows_checked": 1000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "PK-instrument",
+      "category": "primary_key",
+      "description": "instrument: primary key unique and non-null",
+      "rows_checked": 300,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "DUP-instrument-ticker",
+      "category": "duplicates",
+      "description": "instrument: no duplicate (ticker)",
+      "rows_checked": 300,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "PK-market_price",
+      "category": "primary_key",
+      "description": "market_price: primary key unique and non-null",
+      "rows_checked": 75000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "DUP-market_price-instrument_id_price_date",
+      "category": "duplicates",
+      "description": "market_price: no duplicate (instrument_id, price_date)",
+      "rows_checked": 75000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "PK-holding",
+      "category": "primary_key",
+      "description": "holding: primary key unique and non-null",
+      "rows_checked": 5000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "DUP-holding-portfolio_id_instrument_id",
+      "category": "duplicates",
+      "description": "holding: no duplicate (portfolio_id, instrument_id)",
+      "rows_checked": 5000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "PK-target_allocation",
+      "category": "primary_key",
+      "description": "target_allocation: primary key unique and non-null",
+      "rows_checked": 4396,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "DUP-target_allocation-portfolio_id_asset_class_version",
+      "category": "duplicates",
+      "description": "target_allocation: no duplicate (portfolio_id, asset_class, version)",
+      "rows_checked": 4396,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "PK-fee_schedule",
+      "category": "primary_key",
+      "description": "fee_schedule: primary key unique and non-null",
+      "rows_checked": 24,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "DUP-fee_schedule-asset_class_tier_fee_version",
+      "category": "duplicates",
+      "description": "fee_schedule: no duplicate (asset_class, tier, fee_version)",
+      "rows_checked": 24,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "PK-constraint",
+      "category": "primary_key",
+      "description": "constraint: primary key unique and non-null",
+      "rows_checked": 27,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "PK-portfolio_constraint",
+      "category": "primary_key",
+      "description": "portfolio_constraint: primary key unique and non-null",
+      "rows_checked": 1720,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "DUP-portfolio_constraint-portfolio_id_constraint_id",
+      "category": "duplicates",
+      "description": "portfolio_constraint: no duplicate (portfolio_id, constraint_id)",
+      "rows_checked": 1720,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "PK-rebalance_proposal",
+      "category": "primary_key",
+      "description": "rebalance_proposal: primary key unique and non-null",
+      "rows_checked": 301,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "PK-trade",
+      "category": "primary_key",
+      "description": "trade: primary key unique and non-null",
+      "rows_checked": 917,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "PK-proposal_event",
+      "category": "primary_key",
+      "description": "proposal_event: primary key unique and non-null",
+      "rows_checked": 1408,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "PK-drift_snapshot",
+      "category": "primary_key",
+      "description": "drift_snapshot: primary key unique and non-null",
+      "rows_checked": 4000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "DUP-drift_snapshot-portfolio_id_asset_class",
+      "category": "duplicates",
+      "description": "drift_snapshot: no duplicate (portfolio_id, asset_class)",
+      "rows_checked": 4000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "PK-post_trade_allocation",
+      "category": "primary_key",
+      "description": "post_trade_allocation: primary key unique and non-null",
+      "rows_checked": 1204,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "DUP-post_trade_allocation-proposal_id_asset_class",
+      "category": "duplicates",
+      "description": "post_trade_allocation: no duplicate (proposal_id, asset_class)",
+      "rows_checked": 1204,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ID-investor_profile-investor_id",
+      "category": "id_format",
+      "description": "investor_profile.investor_id matches INV-\\d{6}",
+      "rows_checked": 900,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ID-portfolio-portfolio_id",
+      "category": "id_format",
+      "description": "portfolio.portfolio_id matches PORT-INV-\\d{6}-\\d{2}",
+      "rows_checked": 1000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ID-instrument-instrument_id",
+      "category": "id_format",
+      "description": "instrument.instrument_id matches INS-\\d{6}",
+      "rows_checked": 300,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ID-market_price-price_id",
+      "category": "id_format",
+      "description": "market_price.price_id matches PX-INS-\\d{6}-\\d{8}",
+      "rows_checked": 75000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ID-holding-holding_id",
+      "category": "id_format",
+      "description": "holding.holding_id matches HOLD-PORT-INV-\\d{6}-\\d{2}-INS-\\d{6}",
+      "rows_checked": 5000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ID-fee_schedule-fee_schedule_id",
+      "category": "id_format",
+      "description": "fee_schedule.fee_schedule_id matches FEE-\\d{6}",
+      "rows_checked": 24,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ID-constraint-constraint_id",
+      "category": "id_format",
+      "description": "constraint.constraint_id matches CON-\\d{6}",
+      "rows_checked": 27,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ID-portfolio_constraint-portfolio_constraint_id",
+      "category": "id_format",
+      "description": "portfolio_constraint.portfolio_constraint_id matches PC-\\d{6}",
+      "rows_checked": 1720,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ID-rebalance_proposal-proposal_id",
+      "category": "id_format",
+      "description": "rebalance_proposal.proposal_id matches RB-\\d{4}-\\d{6}",
+      "rows_checked": 301,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ID-trade-trade_id",
+      "category": "id_format",
+      "description": "trade.trade_id matches TRD-RB-\\d{4}-\\d{6}-\\d{2}",
+      "rows_checked": 917,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ID-proposal_event-event_id",
+      "category": "id_format",
+      "description": "proposal_event.event_id matches EVT-\\d{6}",
+      "rows_checked": 1408,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ID-portfolio-composition",
+      "category": "id_format",
+      "description": "portfolio_id = PORT-<investor_id>-<seq>",
+      "rows_checked": 1000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ID-holding-composition",
+      "category": "id_format",
+      "description": "holding_id = HOLD-<portfolio_id>-<instrument_id>",
+      "rows_checked": 5000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "FK-portfolio-investor_id",
+      "category": "foreign_key",
+      "description": "portfolio.investor_id -> investor_profile.investor_id",
+      "rows_checked": 1000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "FK-market_price-instrument_id",
+      "category": "foreign_key",
+      "description": "market_price.instrument_id -> instrument.instrument_id",
+      "rows_checked": 75000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "FK-holding-portfolio_id",
+      "category": "foreign_key",
+      "description": "holding.portfolio_id -> portfolio.portfolio_id",
+      "rows_checked": 5000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "FK-holding-instrument_id",
+      "category": "foreign_key",
+      "description": "holding.instrument_id -> instrument.instrument_id",
+      "rows_checked": 5000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "FK-target_allocation-portfolio_id",
+      "category": "foreign_key",
+      "description": "target_allocation.portfolio_id -> portfolio.portfolio_id",
+      "rows_checked": 4396,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "FK-portfolio_constraint-portfolio_id",
+      "category": "foreign_key",
+      "description": "portfolio_constraint.portfolio_id -> portfolio.portfolio_id",
+      "rows_checked": 1720,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "FK-portfolio_constraint-constraint_id",
+      "category": "foreign_key",
+      "description": "portfolio_constraint.constraint_id -> constraint.constraint_id",
+      "rows_checked": 1720,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "FK-rebalance_proposal-portfolio_id",
+      "category": "foreign_key",
+      "description": "rebalance_proposal.portfolio_id -> portfolio.portfolio_id",
+      "rows_checked": 301,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "FK-trade-proposal_id",
+      "category": "foreign_key",
+      "description": "trade.proposal_id -> rebalance_proposal.proposal_id",
+      "rows_checked": 917,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "FK-trade-portfolio_id",
+      "category": "foreign_key",
+      "description": "trade.portfolio_id -> portfolio.portfolio_id",
+      "rows_checked": 917,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "FK-trade-instrument_id",
+      "category": "foreign_key",
+      "description": "trade.instrument_id -> instrument.instrument_id",
+      "rows_checked": 917,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "FK-trade-fee_schedule_id",
+      "category": "foreign_key",
+      "description": "trade.fee_schedule_id -> fee_schedule.fee_schedule_id",
+      "rows_checked": 917,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "FK-proposal_event-proposal_id",
+      "category": "foreign_key",
+      "description": "proposal_event.proposal_id -> rebalance_proposal.proposal_id",
+      "rows_checked": 1408,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "FK-drift_snapshot-portfolio_id",
+      "category": "foreign_key",
+      "description": "drift_snapshot.portfolio_id -> portfolio.portfolio_id",
+      "rows_checked": 4000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "FK-post_trade_allocation-proposal_id",
+      "category": "foreign_key",
+      "description": "post_trade_allocation.proposal_id -> rebalance_proposal.proposal_id",
+      "rows_checked": 1204,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "REQ-investor_profile",
+      "category": "required",
+      "description": "investor_profile: required fields populated",
+      "rows_checked": 900,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ENUM-investor_profile",
+      "category": "enum",
+      "description": "investor_profile: values within allowed enums",
+      "rows_checked": 900,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "REQ-portfolio",
+      "category": "required",
+      "description": "portfolio: required fields populated",
+      "rows_checked": 1000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ENUM-portfolio",
+      "category": "enum",
+      "description": "portfolio: values within allowed enums",
+      "rows_checked": 1000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "REQ-instrument",
+      "category": "required",
+      "description": "instrument: required fields populated",
+      "rows_checked": 300,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ENUM-instrument",
+      "category": "enum",
+      "description": "instrument: values within allowed enums",
+      "rows_checked": 300,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "REQ-market_price",
+      "category": "required",
+      "description": "market_price: required fields populated",
+      "rows_checked": 75000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ENUM-market_price",
+      "category": "enum",
+      "description": "market_price: values within allowed enums",
+      "rows_checked": 75000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "REQ-holding",
+      "category": "required",
+      "description": "holding: required fields populated",
+      "rows_checked": 5000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ENUM-holding",
+      "category": "enum",
+      "description": "holding: values within allowed enums",
+      "rows_checked": 5000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "REQ-target_allocation",
+      "category": "required",
+      "description": "target_allocation: required fields populated",
+      "rows_checked": 4396,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ENUM-target_allocation",
+      "category": "enum",
+      "description": "target_allocation: values within allowed enums",
+      "rows_checked": 4396,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "REQ-fee_schedule",
+      "category": "required",
+      "description": "fee_schedule: required fields populated",
+      "rows_checked": 24,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ENUM-fee_schedule",
+      "category": "enum",
+      "description": "fee_schedule: values within allowed enums",
+      "rows_checked": 24,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "REQ-constraint",
+      "category": "required",
+      "description": "constraint: required fields populated",
+      "rows_checked": 27,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ENUM-constraint",
+      "category": "enum",
+      "description": "constraint: values within allowed enums",
+      "rows_checked": 27,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "REQ-portfolio_constraint",
+      "category": "required",
+      "description": "portfolio_constraint: required fields populated",
+      "rows_checked": 1720,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ENUM-portfolio_constraint",
+      "category": "enum",
+      "description": "portfolio_constraint: values within allowed enums",
+      "rows_checked": 1720,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "REQ-rebalance_proposal",
+      "category": "required",
+      "description": "rebalance_proposal: required fields populated",
+      "rows_checked": 301,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ENUM-rebalance_proposal",
+      "category": "enum",
+      "description": "rebalance_proposal: values within allowed enums",
+      "rows_checked": 301,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "REQ-trade",
+      "category": "required",
+      "description": "trade: required fields populated",
+      "rows_checked": 917,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ENUM-trade",
+      "category": "enum",
+      "description": "trade: values within allowed enums",
+      "rows_checked": 917,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "REQ-proposal_event",
+      "category": "required",
+      "description": "proposal_event: required fields populated",
+      "rows_checked": 1408,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ENUM-proposal_event",
+      "category": "enum",
+      "description": "proposal_event: values within allowed enums",
+      "rows_checked": 1408,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "REQ-drift_snapshot",
+      "category": "required",
+      "description": "drift_snapshot: required fields populated",
+      "rows_checked": 4000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ENUM-drift_snapshot",
+      "category": "enum",
+      "description": "drift_snapshot: values within allowed enums",
+      "rows_checked": 4000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "REQ-post_trade_allocation",
+      "category": "required",
+      "description": "post_trade_allocation: required fields populated",
+      "rows_checked": 1204,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "ENUM-post_trade_allocation",
+      "category": "enum",
+      "description": "post_trade_allocation: values within allowed enums",
+      "rows_checked": 1204,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "DATE-001",
+      "category": "date_order",
+      "description": "investor created_date < portfolio inception_date <= as_of",
+      "rows_checked": 1000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "DATE-002",
+      "category": "date_order",
+      "description": "inception_date <= holding acquired_date <= as_of",
+      "rows_checked": 5000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "DATE-003",
+      "category": "date_order",
+      "description": "target effective ranges ordered; one ACTIVE version, earlier versions SUPERSEDED",
+      "rows_checked": 4396,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "DATE-004",
+      "category": "date_order",
+      "description": "instrument listing_date before first price_date",
+      "rows_checked": 300,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "DATE-005",
+      "category": "date_order",
+      "description": "kyc_expiry_date < as_of iff kyc_status = EXPIRED",
+      "rows_checked": 900,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "DEP-001",
+      "category": "dependency",
+      "description": "portfolio FROZEN iff investor KYC EXPIRED",
+      "rows_checked": 1000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "DATE-006",
+      "category": "date_order",
+      "description": "all price dates are weekdays",
+      "rows_checked": 75000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "PX-001",
+      "category": "arithmetic",
+      "description": "close_price null iff MISSING",
+      "rows_checked": 75000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "PX-002",
+      "category": "coverage",
+      "description": "every instrument has 250 daily price rows",
+      "rows_checked": 300,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "HLD-001",
+      "category": "arithmetic",
+      "description": "holding price_used/date/age equals last observed MarketPrice",
+      "rows_checked": 5000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "HLD-002",
+      "category": "arithmetic",
+      "description": "holding stale flag = age > threshold",
+      "rows_checked": 5000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "HLD-003",
+      "category": "arithmetic",
+      "description": "market_value = quantity x price_used",
+      "rows_checked": 5000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "HLD-004",
+      "category": "arithmetic",
+      "description": "current_weight_pct = market_value / portfolio total",
+      "rows_checked": 5000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "HLD-005",
+      "category": "arithmetic",
+      "description": "current holding weights sum to 100% per portfolio",
+      "rows_checked": 1000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "HLD-006",
+      "category": "coverage",
+      "description": "every portfolio holds all four asset classes",
+      "rows_checked": 1000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "DRF-001",
+      "category": "arithmetic",
+      "description": "drift snapshot recomputed from holdings and targets",
+      "rows_checked": 4000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "DRF-002",
+      "category": "dependency",
+      "description": "every breaching portfolio has a proposal",
+      "rows_checked": 1000,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "CON-001",
+      "category": "dependency",
+      "description": "is_excluded flag matches firm-wide EXCLUDED_INSTRUMENT constraints",
+      "rows_checked": 300,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "TRD-001",
+      "category": "arithmetic",
+      "description": "notional = quantity x price_used",
+      "rows_checked": 917,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "TRD-002",
+      "category": "arithmetic",
+      "description": "holding_quantity_before equals Holding table",
+      "rows_checked": 917,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "TRD-003",
+      "category": "dependency",
+      "description": "trade portfolio equals proposal portfolio",
+      "rows_checked": 917,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "TRD-004",
+      "category": "arithmetic",
+      "description": "trade quantity is a multiple of lot size",
+      "rows_checked": 917,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "PRP-001",
+      "category": "arithmetic",
+      "description": "proposal totals reconcile to trades and holdings",
+      "rows_checked": 301,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "PRP-002",
+      "category": "arithmetic",
+      "description": "post-trade allocation recomputed from holdings, trades and prices",
+      "rows_checked": 301,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "PRP-003",
+      "category": "coverage",
+      "description": "BLOCKED proposals have no trades; frozen portfolios are blocked",
+      "rows_checked": 301,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "LIF-001",
+      "category": "lifecycle",
+      "description": "event chain: first event DRAFT, from_status continuity, allowed transitions",
+      "rows_checked": 1408,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "LIF-002",
+      "category": "lifecycle",
+      "description": "event timestamps non-decreasing per proposal",
+      "rows_checked": 1408,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "LIF-003",
+      "category": "lifecycle",
+      "description": "proposal.status equals latest event to_status",
+      "rows_checked": 301,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "LIF-004",
+      "category": "lifecycle",
+      "description": "trade_status mapped from proposal status",
+      "rows_checked": 917,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    },
+    {
+      "check_id": "LIF-005",
+      "category": "lifecycle",
+      "description": "event timestamps not before proposal generated_at",
+      "rows_checked": 1408,
+      "violations": 0,
+      "status": "PASS",
+      "examples": []
+    }
+  ]
+}

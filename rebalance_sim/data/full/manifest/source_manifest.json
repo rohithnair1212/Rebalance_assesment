@@ -1,0 +1,203 @@
+{
+  "dataset": "Portfolio rebalancing simulation (educational, synthetic)",
+  "generator_version": "1.0.0",
+  "generator_command": "python -m rebalance_sim generate --scale full --seed 20261022 --out <OUT_DIR>",
+  "seed": 20261022,
+  "parameters": {
+    "seed": 20261022,
+    "n_portfolios": 1000,
+    "n_instruments": 300,
+    "n_holdings": 5000,
+    "n_days": 250,
+    "as_of_date": "2026-10-16",
+    "stale_days_threshold": 3,
+    "missing_price_rate": 0.008,
+    "stale_instrument_rate": 0.04,
+    "high_notional_usd": 250000.0,
+    "high_turnover_pct": 20.0,
+    "max_turnover_pct": 25.0,
+    "rate_weights_not_100": 0.02,
+    "rate_trade_exceeds_holding": 0.015,
+    "rate_excluded_recommended": 0.015,
+    "rate_fees_omitted": 0.02,
+    "rate_stale_unflagged": 0.015
+  },
+  "external_data_used": false,
+  "sources": [],
+  "provenance": "All records are produced by rebalance_sim from the seeded generator. No external datasets, scraped data, real tickers, names or personal data were used. Public financial-data conventions (asset-class buckets, tiered commissions, ADV liquidity caps) informed only the schema design.",
+  "license": "Synthetic data released for educational use; no restrictions, no warranty.",
+  "disclaimer": "Educational simulation. Not financial advice.",
+  "files": [
+    {
+      "path": "csv/constraint.csv",
+      "sha256": "03b1939b1bd81c1b94e01d828c4f1a7f5799c80ad14abff59f8216f8240ce2a7",
+      "rows": 27
+    },
+    {
+      "path": "csv/drift_snapshot.csv",
+      "sha256": "a2df2e4fe6236dc43c98d5a2bef425eceec8e11a3c113ba4a160867cccefb2d2",
+      "rows": 4000
+    },
+    {
+      "path": "csv/fee_schedule.csv",
+      "sha256": "529cf76987ae861100c1af031bc309f8231315f6af224d94d1b209da5d36bf28",
+      "rows": 24
+    },
+    {
+      "path": "csv/holding.csv",
+      "sha256": "b085868e1038f6f66083caa0132efef90dfc387b8d69b47983235515f30d4b5b",
+      "rows": 5000
+    },
+    {
+      "path": "csv/instrument.csv",
+      "sha256": "cbb9497442bbcadd332c2a25f223f03aa24f6e1e6c6ec90c1f7fae56397e398b",
+      "rows": 300
+    },
+    {
+      "path": "csv/investor_profile.csv",
+      "sha256": "21aece7e3d8e232412a6b4513a6c1f7d5315b6991a441b0ad330c34712bdfdc5",
+      "rows": 900
+    },
+    {
+      "path": "csv/market_price.csv",
+      "sha256": "6942ae7c8d7a57999cb1957a8e08510dd43e118cfefb0eaf063751c8db3a8c7c",
+      "rows": 75000
+    },
+    {
+      "path": "csv/portfolio.csv",
+      "sha256": "1a22b60673b45d0e71c5fb80c487f5d49acf9f4bfeb46fbc88460ec6854d0333",
+      "rows": 1000
+    },
+    {
+      "path": "csv/portfolio_constraint.csv",
+      "sha256": "5a67ff38d2414c8f271a9a15b1e01fd6f72e755af3e59c69f3ffe9d51570d452",
+      "rows": 1720
+    },
+    {
+      "path": "csv/post_trade_allocation.csv",
+      "sha256": "ea8134562da03b7cede31734463af9bc4401c3d6d9476f42f3c200766a7a1628",
+      "rows": 1204
+    },
+    {
+      "path": "csv/proposal_event.csv",
+      "sha256": "ed7dd2e84727c6b2168b6f22f3cf5ebf63c506682f03e77ff144306fb05b50cb",
+      "rows": 1408
+    },
+    {
+      "path": "csv/rebalance_proposal.csv",
+      "sha256": "adc2c1bf5e15e9f0e7f0cb927ecc7e94903cfff53ec467112d0fd0045f22982d",
+      "rows": 301
+    },
+    {
+      "path": "csv/target_allocation.csv",
+      "sha256": "d3e862fc007b0b77563b1cf94eb91e45bec80751ccbe9b14dc33fb84367431cd",
+      "rows": 4396
+    },
+    {
+      "path": "csv/trade.csv",
+      "sha256": "3e52a7c2aabd6e2d7a346f60462e3bb8d0d4d6d5ac32d17d2cbc23f0e1cb973a",
+      "rows": 917
+    },
+    {
+      "path": "docs/data_dictionary.csv",
+      "sha256": "b120427da934ce609b8edbd8bf236a3660ebea5d7a15fe40e8fa4f6da7c0ecf9"
+    },
+    {
+      "path": "docs/data_dictionary.md",
+      "sha256": "5b273959f3f807c2570c1f7e24bcab9eb87a09903cbefb09e8eda290e55341cf"
+    },
+    {
+      "path": "docs/generator_command.txt",
+      "sha256": "88918c51994e384fb0f182aade22f11c0f0835dcc60b39dec9820d5ffdb94140"
+    },
+    {
+      "path": "ground_truth/ground_truth.csv",
+      "sha256": "d9aebc5ff656d73405f09ab9661882a637206620dbc8ae983235b4d8e7046482",
+      "rows": 1975
+    },
+    {
+      "path": "ground_truth/ground_truth.json",
+      "sha256": "a56594fff94a87a879e21b711d522deed513d5afc894158b9b772067a24823f1"
+    },
+    {
+      "path": "json/constraint.json",
+      "sha256": "4f179c0ad311712112ec3c87c83a625842b7aa40d1a257176e69a6e4ceded8b5"
+    },
+    {
+      "path": "json/drift_snapshot.json",
+      "sha256": "682a64a8b6699babbd63e05c095200cf11c58347d10d785ed97ecc8257f9f147"
+    },
+    {
+      "path": "json/fee_schedule.json",
+      "sha256": "848e1ddcf578de57a7f19bd00212ea9ca98d539e2386bfb22bca9255018d5b83"
+    },
+    {
+      "path": "json/holding.json",
+      "sha256": "60b020dbd704ca676494d2c27fb01137caea590cd62c257363c5db023d6da691"
+    },
+    {
+      "path": "json/instrument.json",
+      "sha256": "244a2dd55b73a28d7bde5f9b6c46836d6c634080b7717bc1cfa6bc293a3b740b"
+    },
+    {
+      "path": "json/investor_profile.json",
+      "sha256": "3c413247c181ec5995f4ad92adec68c6d098401e34b9426052147d94737d3e5b"
+    },
+    {
+      "path": "json/market_price.json",
+      "sha256": "06274a296a108830e7c4763778001147df0825565fccde53f486b46c15259c10"
+    },
+    {
+      "path": "json/portfolio.json",
+      "sha256": "124210b820fc41af121cf23fad1beb81e3110dd456bb714055e945914cb42974"
+    },
+    {
+      "path": "json/portfolio_constraint.json",
+      "sha256": "c783f31ddc2bdd5361faaedd018fb546f598acd8d13750a181286a8cc18395d5"
+    },
+    {
+      "path": "json/post_trade_allocation.json",
+      "sha256": "20b871481496e217b852e228c67feda3e35d653cbb16d26664e51fa8b357281e"
+    },
+    {
+      "path": "json/proposal_event.json",
+      "sha256": "3cdad01aa9d2102bccec7f15cdcd6298020cf87117c941261f8aeb6bcd213af3"
+    },
+    {
+      "path": "json/rebalance_proposal.json",
+      "sha256": "912391bd81b9b9e3bcc08e44289358257e45ddf61bf835cd62f6242a6b268649"
+    },
+    {
+      "path": "json/target_allocation.json",
+      "sha256": "44e5cb7b08dac14af48bed5538053752c7aaf128463ecb028a357c27eea78b95"
+    },
+    {
+      "path": "json/trade.json",
+      "sha256": "b927e133427b272b39529064f7532a44df32b73092844a16f8609513fed0114e"
+    },
+    {
+      "path": "sql/schema.sql",
+      "sha256": "edc1c2f963f76e7dae1a0b443579335ba36d550daa79a55535da680f53356061"
+    },
+    {
+      "path": "sql/seed.sql",
+      "sha256": "41915cdcd8d149fbda73a4d574e584affc8e7cfb5a66f6d89fe3f2d56ce57bf1"
+    },
+    {
+      "path": "validation/evaluation_metrics.json",
+      "sha256": "00f37ca74afbf068115dfce9486706d93d80fa67994debb2a94667d3e43541ff"
+    },
+    {
+      "path": "validation/findings.csv",
+      "sha256": "814e44d5be1aef47242cb164a0b009cdcdfa04e0c4196db70766390f5541f2a7"
+    },
+    {
+      "path": "validation/validation_summary.json",
+      "sha256": "7629be888e14f2aa67e2cdb467ea25b681ed2144b44b4095693a374d5edd9e55"
+    },
+    {
+      "path": "validation/validation_summary.md",
+      "sha256": "bf7622c87b9391cec8eea1de23561a8a4273e66f65ce6f9a8cb8055bd4f4c603"
+    }
+  ]
+}
